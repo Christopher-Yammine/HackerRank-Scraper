@@ -1,0 +1,17 @@
+.hacker-badge {
+    width: 150px;
+}
+
+.badges-list {
+    display: flex;
+}
+
+.badge-title {
+    text-align: center;
+    top: 0;
+    left: 0;
+}
+
+.user-container {
+    display: flex;
+}
