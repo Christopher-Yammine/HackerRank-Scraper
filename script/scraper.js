@@ -1,4 +1,3 @@
-// let student_nbr = 0;
 let user_names_arr = [];
 let user_info = [];
 let final_output = document.getElementById('final-output');
@@ -6,7 +5,6 @@ let student_field = document.getElementById("requests-number");
 let inputFile = document.getElementById("uploadFile")
 let display_btn = document.getElementById('submit');
 
-// student_field.addEventListener("change", retrieveStudentsNbr);
 display_btn.addEventListener("click", displayUsers);
 
 function getUserPages(hackerRank_username) {
@@ -31,14 +29,6 @@ function getUserPages(hackerRank_username) {
         user_info.push(scraped_info);
     })
 }
-
-
-
-// function retrieveStudentsNbr() {
-//     student_nbr = student_field.value
-//     console.log(student_nbr)
-
-// }
 
 
 async function ReadFile(file) {
@@ -79,5 +69,5 @@ function displayUsers() {
             final_output.innerHTML += element;
 
         }
-    }, 15500);
+    }, 16500);
 }

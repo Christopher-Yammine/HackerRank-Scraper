@@ -5,3 +5,7 @@
 .user-container {
     display: flex;
 }
+
+.upload-csv {
+    margin: 30px 0;
+}
