@@ -69,5 +69,5 @@ function displayUsers() {
             final_output.innerHTML += element;
 
         }
-    }, 16500);
+    }, 20000);
 }
