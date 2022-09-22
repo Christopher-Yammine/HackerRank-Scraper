@@ -1,73 +1,71 @@
 let user_names_arr = [];
 let user_info = [];
-let final_output = document.getElementById('final-output');
-let student_field = document.getElementById("requests-number");
-let inputFile = document.getElementById("uploadFile")
-let display_btn = document.getElementById('submit');
+// To display the final output, injecting content
+let final_output = document.getElementById("final-output");
+// To handle uploads of files
+let inputFile = document.getElementById("uploadFile");
+//To handle submit button
+let display_btn = document.getElementById("submit");
+
+let init_htmlbody = document.getElementById("initial-output");
 
 display_btn.addEventListener("click", displayUsers);
 
-function getUserPages(hackerRank_username) {
-    axios({
-        method: "GET",
-        url: `https://api.allorigins.win/get?url=${encodeURIComponent('https://www.hackerrank.com/')}` + hackerRank_username,
+async function getUserPages(hackerRank_username, index) {
+    const res = await axios.get(
+        `https://api.allorigins.win/get?url=${encodeURIComponent(
+            "https://www.hackerrank.com/"
+        )}` + hackerRank_username
+    );
 
+    let url_content = res.data.contents;
+    init_htmlbody.innerHTML += url_content;
 
-    }).then(function (res) {
-        let init_htmlbody = document.getElementById("initial-output");
-        let url_content = res.data.contents;
-        init_htmlbody.innerHTML += url_content;
+    return new Promise((resolve) => {
+        setTimeout(function () {
+            try {
 
+                let badge = document.getElementsByClassName("section-card-content")[0].innerHTML;
+                let username = document.getElementsByClassName("profile-username-heading")[0].innerHTML;
+                let name = document.getElementsByClassName("profile-heading")[0].innerHTML;
+                init_htmlbody.innerHTML = "";
+                let scraped_info = `<div class="user-container">${username}  ${name}  ${badge}</div>`;
+                user_info.push(scraped_info);
+            } catch {
+                console.log("Skipped");
+            }
 
-        let badge = document.getElementsByClassName("section-card-content")[0].innerHTML;
-        let username = document.getElementsByClassName("profile-username-heading")[0].innerHTML;
-        let name = document.getElementsByClassName("profile-heading")[0].innerHTML;
-
-
-        init_htmlbody.innerHTML = "";
-        let scraped_info = `<div class="user-container">${username}  ${name}  ${badge}</div>`;
-        user_info.push(scraped_info);
-    })
+            resolve();
+        }, 10);
+    });
 }
 
-
-async function ReadFile(file) {
-    return await file.text()
+function ReadFile(file) {
+    return file.text();
 }
 
-inputFile.onchange = () => {
+// Whenever a file is uploaded, this fires up
+inputFile.onchange = async () => {
+    const selectedFile = document.getElementById("uploadFile").files[0];
 
+    const fileContent = await ReadFile(selectedFile);
 
-    const selectedFile = document.getElementById('uploadFile').files[0]
-    const promise = new Promise(resolve => {
-        const fileContent = ReadFile(selectedFile)
-        resolve(fileContent)
-    })
+    const myObj = $.csv.toObjects(fileContent);
 
-    promise.then(fileContent => {
-
-        const myObj = $.csv.toObjects(fileContent)
-        for (let j = 0; j < myObj.length; j++) {
-            user_names_arr.push(myObj[j].Username)
-        }
-
-
-
-    })
-}
-
-
-function displayUsers() {
-    for (let una = 0; una < user_names_arr.length; una++) {
-        getUserPages(user_names_arr[una])
-        console.log(user_names_arr[una])
-        console.log(user_info)
+    for (let j = 0; j < myObj.length; j++) {
+        user_names_arr.push(myObj[j].Username);
     }
-    setTimeout(() => {
-        for (let i = 0; i < user_info.length; i++) {
-            let element = user_info[i];
-            final_output.innerHTML += element;
+};
 
-        }
-    }, 20000);
+//This calls get User Pages for every username on the csv file
+async function displayUsers() {
+    for (let i = 0; i < user_names_arr.length; i++) {
+        await getUserPages(user_names_arr[i], i);
+    }
+
+    for (let i = 0; i < user_info.length; i++) {
+        let element = user_info[i];
+        final_output.innerHTML += element;
+    }
+
 }
