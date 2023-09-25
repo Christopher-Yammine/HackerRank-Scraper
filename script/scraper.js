@@ -19,7 +19,7 @@ async function getUserPages(hackerRank_username, index) {
     let res = '';
     try {
         res = await axios.get(
-            `https://corsanywhere.herokuapp.com/https://www.hackerrank.com/${hackerRank_username}`
+            `https://api.allorigins.win/raw?url=https://www.hackerrank.com/${hackerRank_username}`
         );
     } catch (e) {
         console.log(e)
